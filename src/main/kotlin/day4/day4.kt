@@ -14,17 +14,16 @@ fun part2() {
     fun Int.drawCard() : Int {
         var sum = 1
         (this + 1 until this + 1 + input.getCard(this).countWinningNumbers()).forEach {
-            if (drawnCards.contains(it)) {
-                sum += drawnCards[it]!!
-            } else {
-                sum += it.drawCard()
-                drawnCards[it] = sum - 1
+            if (!drawnCards.contains(it)) {
+                drawnCards[it] = it.drawCard()
             }
+            sum += drawnCards[it]!!
         }
         return sum
     }
 
     println((1 .. input.size).sumOf { it.drawCard() })
+    println(drawnCards)
 }
 
 fun List<String>.getCard(gameIndex : Int) = input[gameIndex - 1]
