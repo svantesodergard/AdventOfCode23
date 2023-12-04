@@ -9,18 +9,22 @@ fun main() = part2()
 fun part1() = println (input.map { it.countWinningNumbers() }.sumOf { 2.toDouble().pow(it - 1).toInt() })
 
 fun part2() {
-    var sum = 0
+    val drawnCards = mutableMapOf<Int, Int>()
 
-    fun Int.drawCard() {
+    fun Int.drawCard() : Int {
+        var sum = 1
         (this + 1 until this + 1 + input.getCard(this).countWinningNumbers()).forEach {
-            it.drawCard()
+            if (drawnCards.contains(it)) {
+                sum += drawnCards[it]!!
+            } else {
+                sum += it.drawCard()
+                drawnCards[it] = sum - 1
+            }
         }
-        sum++
-        println(sum)
+        return sum
     }
 
-    (1 .. 6).forEach { it.drawCard() }
-    println(sum)
+    println((1 .. input.size).sumOf { it.drawCard() })
 }
 
 fun List<String>.getCard(gameIndex : Int) = input[gameIndex - 1]
